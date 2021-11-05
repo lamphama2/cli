@@ -1,0 +1,13 @@
+#!/bin/bash
+flavor="$1"
+type="$2"
+command="assemble${flavor}${type}"
+folder="app/build/outputs/apk/$flavor/$type"
+ls $folder |grep apk
+old_file="$folder/$(ls $folder |grep apk)"
+echo $old_file
+rm "$old_file"
+./gradlew "$command"
+new_file="$folder/$(ls $folder |grep apk)"
+echo $new_file
+adb install "$new_file"

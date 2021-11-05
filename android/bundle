@@ -1,0 +1,36 @@
+#!/bin/bash
+
+bundle="$1"
+path="$2"
+ks_pass="$3"
+alias="$4"
+alias_pass="$5"
+if [ -z "$1" ]; then
+	echo "bundle file missing"
+	exit 0
+fi
+
+if [ -z "$2" ]; then
+	echo "keystore path missing"
+	exit 0
+fi
+
+if [ -z "$3" ]; then
+	echo "keystore password missing"
+	exit 0
+fi
+
+if [ -z "$4" ]; then
+	echo "alias missing"
+	exit 0
+fi
+
+if [ -z "$5" ]; then
+	echo "alias passwo missing"
+	exit 0
+fi
+
+rm app.apks
+bundletool build-apks --bundle="$bundle" --output=app.apks --ks="$path" --ks-pass=pass:"$ks_pass" --ks-key-alias="$alias" --key-pass=pass:"$alias_pass"  || exit 0
+
+bundletool install-apks --apks=app.apks
