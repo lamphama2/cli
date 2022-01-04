@@ -1,0 +1,15 @@
+#!/bin/bash
+
+index="$1"
+
+if [[ "$index" == "" ]];then
+	index=1
+fi
+
+result=( $(grep -Eo '.+|R.+' <<<"$(emulator -list-avds)") )
+
+avd="${result[index - 1]}"
+
+echo "---------------------Running $avd------------------"
+
+emulator -avd "$avd"
