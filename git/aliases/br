@@ -1,0 +1,27 @@
+!f() {
+	while getopts d:D: flag
+	do
+		arg="$flag"
+    	case "${flag}" in
+        	d) number=${OPTARG};;
+        	D) number=${OPTARG};;
+    	esac
+	done
+	count=0
+	if [[ -z $number ]]; then
+		git branch | while read branch; do 
+			((count++))
+			[[ $count -ge 10 ]] && printf "$count " || printf "$count  "
+			[[ "$branch" =~ ^\*.*$ ]] && echo "$branch" || echo "  $branch"
+		done
+	else
+		git branch | while read branch; do 
+			((count++))
+			if [[ "$count" -eq "$number" ]];then
+				git branch -"$arg" "$branch"
+				return
+			fi
+		done
+	fi
+
+}; f
