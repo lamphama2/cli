@@ -1,0 +1,26 @@
+!f() {
+  number=$1
+	while getopts d: flag
+	do
+		arg="$flag"
+    case "${flag}" in
+        d) number=${OPTARG};;
+    esac
+	done
+	if [[ -z $number ]]; then
+    echo "Missing branch number"
+		exit 0
+	fi
+  count=0
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  git branch | while read branch; do 
+		((count++))
+		if [[ "$count" -eq "$number" ]];then
+			git checkout "$branch"
+      if [[ ! -z "$arg" ]]; then
+        git branch -d "$current_branch"
+      fi
+			return
+		fi
+	done
+}; f
